@@ -1,0 +1,18 @@
+
+table {
+  margin-right: auto;
+  margin-left: auto;
+  border-collapse: collapse;
+}
+
+td {
+  cursor: pointer;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  width: 24px;
+  height: 24px;
+}
+
+
