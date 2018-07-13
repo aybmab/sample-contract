@@ -105,8 +105,8 @@ class App extends Component {
       is_fetching_board: true
     })
 
-
     const contract = new web3.eth.Contract(contract_abi, contract_address)
+    contract.options.from = accounts[0]
 
     console.log({contract})
     window.mycontract = contract
@@ -122,7 +122,6 @@ class App extends Component {
     }
 
     await Bluebird.map(pixels, async pixel => {
-
       const src = await contract.methods.getAssignment(pixel.i,pixel.j).call().catch(e => {
         console.log("errored...")
         return 0        
@@ -144,7 +143,7 @@ class App extends Component {
     } = this.state
 
     console.log("inside this shit")
-    await contract.methods.claimPixel(i,j, src).call().catch(e => {
+    await contract.methods.claimPixel(i,j, src).send().catch(e => {
       console.log("errored...", e)
       return 0        
     })
@@ -189,7 +188,6 @@ class App extends Component {
           </div>
         }
 
-        
       </div>
 
     );
