@@ -15,4 +15,6 @@ td {
   height: 24px;
 }
 
-
+td:hover {
+  background: #fce5f2 !important;
+}
