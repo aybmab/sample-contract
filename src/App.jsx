@@ -4,7 +4,7 @@ import PixelGrid from './components/pixel_grid/PixelGrid.jsx';
 import Web3 from 'web3';
 import Bluebird from 'bluebird';
 
-const contract_address = '0x50df62d290ffee39e3d61e8de6d3e2d2ac5fd8b2'
+const contract_address = '0x5b7b467fbffa500124ae9bbb37764c77535337fe'
 const contract_abi = [
   {
     "constant": false,
@@ -19,7 +19,7 @@ const contract_abi = [
       },
       {
         "name": "src",
-        "type": "uint256"
+        "type": "string"
       }
     ],
     "name": "claimPixel",
@@ -27,6 +27,34 @@ const contract_abi = [
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "i",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "j",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "src",
+        "type": "string"
+      }
+    ],
+    "name": "PixelClaimed",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
     "constant": true,
@@ -44,18 +72,12 @@ const contract_abi = [
     "outputs": [
       {
         "name": "",
-        "type": "uint256"
+        "type": "string"
       }
     ],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
-  },
-  {
-    "inputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "constructor"
   }
 ]
 
@@ -65,7 +87,6 @@ class App extends Component {
 
     const is_connected = typeof Web3.givenProvider !== 'undefined'
     const web3 = is_connected ? new Web3(Web3.givenProvider) : null
-    console.log(web3)
     window.myweb3 = web3
     
     this.state = {
@@ -97,8 +118,6 @@ class App extends Component {
 
     const accounts = await web3.eth.getAccounts()
 
-    console.log("got accounts: ", accounts)
-
     this.setState({
       is_fetching_accounts: false,
       accounts,
@@ -126,6 +145,7 @@ class App extends Component {
         console.log("errored...")
         return 0        
       })
+      console.log({src})
       board[pixel.i][pixel.j] = src
     })
 
@@ -141,6 +161,8 @@ class App extends Component {
     const {
       contract,
     } = this.state
+
+    console.log({i, j, src})
 
     console.log("inside this shit")
     await contract.methods.claimPixel(i,j, src).send().catch(e => {
